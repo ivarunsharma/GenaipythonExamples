@@ -2,8 +2,15 @@ import os
 from dotenv import load_dotenv
 from google import genai
 
-load_dotenv()
-client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
+# Load the variables from .env into the system environment
+##load_dotenv()
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), "..", ".env"))
+
+# Access the variable
+api_key = os.getenv("GOOGLE_API_KEY")
+
+# Initialize your client
+client = genai.Client(api_key=api_key)
 
 print("📄 AI Text Summarizer")
 print("Paste your text below. When done, type END on a new line and press Enter.\n")

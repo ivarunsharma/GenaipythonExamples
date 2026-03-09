@@ -3,7 +3,8 @@ from dotenv import load_dotenv
 from google import genai
 
 # Load the variables from .env into the system environment
-load_dotenv()
+##load_dotenv()
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), "..", ".env"))
 
 # Access the variable
 api_key = os.getenv("GOOGLE_API_KEY")
