@@ -6,7 +6,15 @@
 # ══════════════════════════════════════════════════════════════════════════════
 
 
-# ── Core ML Frameworks ─────────────────────────────────────────────────────────
+# ── Google Gemini API (Track 1) ────────────────────────────────────────────────
+# Used in: FirstExampleAPIKey/, SummaryExampleAPI/, ChatBotExample/, PDFSummaryExample/
+google-genai>=1.0
+
+# Used in: all Track 1 modules (loads GOOGLE_API_KEY from .env)
+python-dotenv>=1.0
+
+
+# ── Core ML Frameworks (Track 2) ──────────────────────────────────────────────
 # Used in: test_VAE.py, test_GAN.py
 tensorflow>=2.10
 

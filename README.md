@@ -1,593 +1,603 @@
-# 🤖 GenAI Python Examples
+# GenAI Python Examples
 
-> **A hands-on, deeply documented journey through the four pillars of modern Generative AI** — from compressing pixels to generating images from thin air, from adversarial competition to text-guided creation, and from raw text understanding to intelligent response generation.
+A progressive, hands-on collection of Generative AI examples in Python — from calling a cloud AI API for the very first time, through building stateful chatbots and multimodal PDF tools, all the way to implementing Variational Autoencoders, GANs, Stable Diffusion pipelines, and Transformer models.
 
-Every file in this repository is written to be **read like a textbook** — not just executed. Inline comments explain not just *what* the code does, but *why* it does it, with analogies, visual diagrams, and concept explanations built directly into the source.
-
----
-
-## 📋 Table of Contents
-
-- [Overview](#-overview)
-- [The Learning Journey](#-the-learning-journey)
-- [Repository Structure](#-repository-structure)
-- [Detailed File Breakdown](#-detailed-file-breakdown)
-  - [VAE — Variational Autoencoder](#1-test_vaepy--variational-autoencoder)
-  - [GAN — Generative Adversarial Network](#2-test_ganpy--generative-adversarial-network)
-  - [Stable Diffusion](#3-test_stablediffusionpy--stable-diffusion)
-  - [Transformers](#4-test_transformerspy--transformer-nlp-applications)
-- [Architecture Comparisons](#-architecture-comparisons)
-- [Key Concepts Glossary](#-key-concepts-glossary)
-- [Requirements & Installation](#-requirements--installation)
-- [Running the Examples](#-running-the-examples)
-- [Laptop-Friendly Optimizations](#-laptop-friendly-optimizations)
-- [Model Downloads Reference](#-model-downloads-reference)
-- [Troubleshooting](#-troubleshooting)
-- [License](#-license)
-- [Acknowledgements](#-acknowledgements)
+Every file is written to be **read like a textbook**. Inline comments explain not just *what* the code does, but *why* it does it — with analogies, visual diagrams, and concept explanations woven directly into the source.
 
 ---
 
-## 🌐 Overview
+## Table of Contents
 
-This repository is a **practical, educational GenAI reference** built for developers who want to understand how modern generative models work from the inside — not just call an API.
-
-Each example:
-- Is **self-contained** — runs independently with no cross-file dependencies
-- Is **CPU-friendly** — optimized to run on a standard laptop without a GPU
-- Is **heavily documented** — every design decision is explained inline
-- Progresses **conceptually** — each file builds on ideas from the previous one
-
-**Who this is for:**
-- Developers learning Generative AI for the first time
-- Engineers looking for clean, readable reference implementations
-- Anyone who wants to understand what actually happens inside these models
+- [Project Overview](#project-overview)
+- [Learning Path](#learning-path)
+- [Project Structure](#project-structure)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Modules](#modules)
+  - [1. FirstExampleAPIKey — Gemini API Basics](#1-firstexampleapikey--gemini-api-basics)
+  - [2. SummaryExampleAPI — Text Summarization](#2-summaryexampleapi--text-summarization)
+  - [3. ChatBotExample — Stateless vs Stateful Chatbots](#3-chatbotexample--stateless-vs-stateful-chatbots)
+  - [4. PDFSummaryExample — PDF Understanding and Q&A](#4-pdfsummaryexample--pdf-understanding-and-qa)
+  - [5. PythonCodeTest — Core ML Model Implementations](#5-pythoncodetest--core-ml-model-implementations)
+- [Datasets](#datasets)
+- [Architecture Comparisons](#architecture-comparisons)
+- [Key Concepts Glossary](#key-concepts-glossary)
+- [Laptop-Friendly Optimizations](#laptop-friendly-optimizations)
+- [Model Downloads Reference](#model-downloads-reference)
+- [Troubleshooting](#troubleshooting)
+- [License](#license)
 
 ---
 
-## 🗺️ The Learning Journey
+## Project Overview
 
-The four examples are intentionally ordered. Each one introduces new concepts that either build on, or contrast with, the previous:
+This repository is structured as a two-track learning path through Generative AI:
+
+**Track 1 — Cloud AI APIs (Google Gemini)**
+Work with Google's Gemini 2.5 Flash model via the `google-genai` SDK. No GPU or local training required. These examples teach how to call a production-grade language model, build prompt-engineered requests, manage multi-turn conversation history, and process multimodal inputs such as PDFs.
+
+**Track 2 — Local ML Model Implementation (TensorFlow / PyTorch)**
+Build and train generative models from scratch using real datasets, with no API key required. These examples teach the fundamental architectures that power modern AI — from VAEs and GANs to Stable Diffusion and Transformers.
+
+Both tracks reinforce each other: the cloud API examples show you what modern AI can do; the local implementations show you how it works under the hood.
+
+---
+
+## Learning Path
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                                                                         │
-│  1. VAE ──────────► 2. GAN ──────────► 3. Stable Diffusion             │
-│     │                   │                   │                           │
-│     │                   │                   │                           │
-│  Compress &          Compete &           Text-guided                    │
-│  Reconstruct         Generate            Denoising                      │
-│  (blurry but         (sharper via        (combines                      │
-│   principled)         adversarial         VAE + new                     │
-│                       training)           concepts)                     │
-│                                                                         │
-│  4. Transformers ──────────────────────────────────────────────────►   │
-│     │                                                                   │
-│  Understand &                                                           │
-│  Generate Text                                                          │
-│  (attention-based,                                                      │
-│   pretrained models)                                                    │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
-```
+┌──────────────────────────────────────────────────────────────────────────────┐
+│  TRACK 1 — Cloud AI APIs (Google Gemini)                                     │
+│                                                                              │
+│  1. FirstExampleAPIKey                                                       │
+│     Send your first message → list models → interactive Q&A                 │
+│           │                                                                  │
+│           ▼                                                                  │
+│  2. SummaryExampleAPI                                                        │
+│     Hardcoded text → user-pasted text → file-based summarization            │
+│           │                                                                  │
+│           ▼                                                                  │
+│  3. ChatBotExample                                                           │
+│     Stateless chatbot → stateful chatbot with conversation memory           │
+│           │                                                                  │
+│           ▼                                                                  │
+│  4. PDFSummaryExample                                                        │
+│     Multimodal PDF summary → interactive PDF Q&A loop                       │
+└──────────────────────────────────────────────────────────────────────────────┘
 
-| Step | File | Domain | Core Concept | Output |
-|------|------|--------|-------------|--------|
-| 1 | `test_VAE.py` | Images | Compression + Reconstruction | Generated digit images |
-| 2 | `test_GAN.py` | Images | Adversarial Competition | Sharper digit images |
-| 3 | `test_StableDiffusion.py` | Images | Text-guided Denoising | Photo from text prompt |
-| 4 | `test_Transformers.py` | Text | Attention Mechanism | Sentiment + Generated text |
+┌──────────────────────────────────────────────────────────────────────────────┐
+│  TRACK 2 — Local Model Implementations                                       │
+│                                                                              │
+│  5a. test_VAE.py                                                             │
+│      Compress images to 2D, reconstruct them, generate new ones             │
+│            │                                                                 │
+│            ▼  (sharper output via adversarial training)                      │
+│  5b. test_GAN.py                                                             │
+│      Generator vs Discriminator competition — counterfeiter vs detective     │
+│            │                                                                 │
+│            ▼  (adds text guidance and denoising)                             │
+│  5c. test_StableDiffusion.py                                                 │
+│      Text prompt → image via CLIP + UNet + VAE + Scheduler                  │
+│            │                                                                 │
+│            ▼  (shifts to language)                                           │
+│  5d. test_Transformers.py                                                    │
+│      Sentiment analysis (DistilBERT) + text generation (GPT-2)              │
+│            │                                                                 │
+│            ▼  (pure Python, no ML framework)                                 │
+│  5e. test_encodeDecode.py                                                    │
+│      Run-length encoding and decoding for text files                         │
+└──────────────────────────────────────────────────────────────────────────────┘
+```
 
 ---
 
-## 📁 Repository Structure
+## Project Structure
 
 ```
-GenaipythonExamples/
+GenAiPythonExamples/
 │
-├── 📄 test_VAE.py                  # Variational Autoencoder
-├── 📄 test_GAN.py                  # Generative Adversarial Network
-├── 📄 test_StableDiffusion.py      # Stable Diffusion (text-to-image)
-├── 📄 test_Transformers.py         # Transformer NLP (classify + generate)
+├── .env                              # Your API key (not committed to git)
 │
-├── 📄 requirements.txt             # All Python dependencies
-├── 📄 LICENSE                      # MIT License
-└── 📄 README.md                    # This file
+├── datasets/                         # Shared data files used across all modules
+│   ├── summarization_dataset.txt     # Long-form text for summarization examples
+│   ├── sample.pdf                    # PDF for multimodal summary and Q&A
+│   ├── sampleText.txt                # Plain text for encode/decode testing
+│   ├── sampleText_encoded.txt        # Auto-generated encoded output
+│   └── sampleText_decoded.txt        # Auto-generated decoded output
+│
+├── FirstExampleAPIKey/               # Track 1 — Getting started with Gemini
+│   ├── first_ai.py                   # Validate API key with a simple message
+│   ├── list_models.py                # List all models on your API key
+│   └── ask_question.py              # Interactive single-turn Q&A
+│
+├── SummaryExampleAPI/                # Track 1 — Text summarization
+│   ├── summarize.py                  # Summarize hardcoded text
+│   ├── summarize_input.py            # Summarize user-pasted text (interactive)
+│   └── summarize_file.py             # Summarize from a .txt file
+│
+├── ChatBotExample/                   # Track 1 — Conversational AI patterns
+│   ├── chatbot.py                    # Stateless chatbot (no memory)
+│   └── chatbot_memory.py             # Stateful chatbot (full conversation history)
+│
+├── PDFSummaryExample/                # Track 1 — Multimodal PDF understanding
+│   ├── pdf_summary.py                # One-shot PDF summarizer
+│   └── pdf_summary_advanced.py       # PDF summarizer with interactive Q&A loop
+│
+├── PythonCodeTest/                   # Track 2 — Core generative ML implementations
+│   ├── test_VAE.py                   # Variational Autoencoder (TensorFlow/Keras)
+│   ├── test_GAN.py                   # Generative Adversarial Network (TensorFlow/Keras)
+│   ├── test_StableDiffusion.py       # Stable Diffusion text-to-image (PyTorch)
+│   ├── test_Transformers.py          # Sentiment analysis + text generation (PyTorch)
+│   └── test_encodeDecode.py          # Run-length encoding/decoding utility
+│
+├── requirements.txt                  # All Python dependencies
+└── README.MD                         # This file
 ```
 
 ---
 
-## 📚 Detailed File Breakdown
+## Prerequisites
+
+| Requirement | Detail |
+|---|---|
+| Python | 3.9 or higher |
+| pip | Latest recommended |
+| Google AI API Key | Required for Track 1 modules only |
+| Internet connection | Required for first-time Hugging Face model downloads |
+| GPU | Optional — all examples are tuned to run on CPU |
+
+> **No GPU needed.** Every example in this repository is configured to complete in minutes on a standard laptop CPU. Training sizes, epochs, and model selections have been deliberately reduced for this purpose.
 
 ---
 
-### 1. `test_VAE.py` — Variational Autoencoder
+## Installation
 
-#### What is a VAE?
+**1. Clone the repository**
 
-A **Variational Autoencoder** is a neural network that learns to compress data into a small representation and reconstruct it back. The "Variational" part is the key differentiator: instead of compressing to **exact numbers**, it compresses to a **range** (defined by a mean and variance).
-
-This seemingly small difference has a profound consequence: you can **generate brand new images** by sampling random points from that range — the network has learned the *concept* of what digits look like, not just memorized them.
-
-#### The Counterfeiter Analogy
-
-Think of it like describing a person's face using just 2 numbers:
-- A basic autoencoder says: *"This face = (3.2, 7.1)"* — exact, fixed.
-- A VAE says: *"This face is somewhere around (3.2 ± 0.5, 7.1 ± 0.3)"* — a range.
-
-With a range, you can sample a random point within it and generate a **slightly different but still realistic face** — one the network has never seen.
-
-#### Architecture
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                        ENCODER                                  │
-│                                                                 │
-│  Input Image        Flatten      Dense(128)     Outputs         │
-│  (28×28)     ──►   (784)   ──►  (patterns) ──► z_mean (2)      │
-│                                             └─► z_log_var (2)   │
-└─────────────────────────────────────────────────────────────────┘
-                              │
-                    ┌─────────▼──────────┐
-                    │   SAMPLING LAYER   │
-                    │                   │
-                    │  z = mean +        │
-                    │  exp(0.5*logvar)   │
-                    │  * ε (random)      │
-                    └─────────┬──────────┘
-                              │
-┌─────────────────────────────▼───────────────────────────────────┐
-│                        DECODER                                  │
-│                                                                 │
-│  Latent (2)  ──► Dense(128) ──► Dense(784) ──► Reshape(28×28)  │
-│                                sigmoid            Output Image  │
-└─────────────────────────────────────────────────────────────────┘
+```bash
+git clone <your-repo-url>
+cd GenAiPythonExamples
 ```
 
-#### The Two Losses
+**2. Create and activate a virtual environment**
 
-The VAE uses two loss functions added together:
+```bash
+# macOS / Linux
+python3 -m venv venv
+source venv/bin/activate
 
-| Loss | Formula | Purpose |
-|------|---------|---------|
-| **Reconstruction Loss** | Binary crossentropy × 784 | How different is output from input? |
-| **KL Loss** | −0.5 × (1 + log_var − mean² − exp(log_var)) | Is the latent space well organized? |
-
-KL Loss is the guardian of generation quality — without it, the encoder could output wild, scattered ranges that reconstruct well but produce garbage for new random points.
-
-#### Key Parameters (Optimized for Laptop)
-
-| Parameter | Value | Why |
-|-----------|-------|-----|
-| `latent_dim` | 8 | Balance between detail and speed (2=blurry, 128=sharp but slow) |
-| `Dense` size | 128 | Middle ground between 784 input and 2 latent |
-| `epochs` | 10 | Sufficient to see meaningful output |
-| Training samples | 5,000 | Fast training without sacrificing concept demonstration |
-
-#### What the Output Signifies
-
-A 4×4 grid of 16 generated digit images that **never existed in the training data**. The VAE decoded random latent points into coherent digit-like images — proof it learned the structural concept of handwritten digits, not just pixel patterns.
-
----
-
-### 2. `test_GAN.py` — Generative Adversarial Network
-
-#### What is a GAN?
-
-A **Generative Adversarial Network** trains two networks in direct competition:
-
-- **Generator** — creates fake images from random noise. Goal: fool the discriminator.
-- **Discriminator** — examines images and decides real or fake. Goal: catch the generator.
-
-They train simultaneously. The generator gets better at faking; the discriminator gets better at detecting. This arms race drives the generator to produce increasingly realistic images.
-
-**The perfect analogy: Counterfeiter vs Detective.** Both improve by competing with each other.
-
-#### Why GAN Produces Sharper Images Than VAE
-
-| Model | Optimization Target | Result |
-|-------|-------------------|--------|
-| VAE | Average of all possible reconstructions | Blurry (mathematically averaging causes blur) |
-| GAN | Fool a trained detector | Sharp (must look realistic enough to deceive) |
-
-#### Architecture
-
-```
-┌────────────────────────────────────────────────────────────────────┐
-│                         GENERATOR                                  │
-│                                                                    │
-│  100 random     Dense    Dense    Dense    Dense(784)  Reshape     │
-│  numbers   ──► (256) ──► (512) ──► (1024) ──► tanh  ──► (28,28,1) │
-│  (noise)        ↕         ↕         ↕                              │
-│              LeakyReLU LeakyReLU LeakyReLU                         │
-│              BatchNorm BatchNorm BatchNorm                          │
-└────────────────────────────────────────────────────────────────────┘
-
-┌────────────────────────────────────────────────────────────────────┐
-│                       DISCRIMINATOR                                │
-│                                                                    │
-│  Image      Flatten   Dense    Dense    Dense(1)                   │
-│  (28,28,1) ──► (784) ──► (512) ──► (256) ──► sigmoid              │
-│                           ↕         ↕         │                    │
-│                        LeakyReLU LeakyReLU    ▼                    │
-│                        Dropout   Dropout    0=Fake                 │
-│                                             1=Real                 │
-└────────────────────────────────────────────────────────────────────┘
+# Windows
+python -m venv venv
+venv\Scripts\activate
 ```
 
-#### The Training Loop
-
-Each batch executes two distinct steps:
-
-```
-┌──────────────────────────────────────────────────────────────┐
-│  STEP 1 — Train Discriminator (Generator frozen)             │
-│                                                              │
-│  Real images + noisy labels (~0.8-1.0) → train              │
-│  Fake images + noisy labels (~0.0-0.2) → train              │
-│  Discriminator learns to distinguish real from fake          │
-└──────────────────────────────────────────────────────────────┘
-┌──────────────────────────────────────────────────────────────┐
-│  STEP 2 — Train Generator (Discriminator frozen)             │
-│                                                              │
-│  Noise → Generator → Fake image → Discriminator             │
-│  Tell GAN these should score ~1.0 (real)                     │
-│  Only generator weights update                               │
-│  Generator learns to produce images that fool discriminator  │
-└──────────────────────────────────────────────────────────────┘
-```
-
-#### Stability Techniques Used
-
-| Technique | What It Does | Why Needed |
-|-----------|-------------|-----------|
-| **Label Smoothing** | Real=0.8-1.0, Fake=0.0-0.2 instead of exact 0/1 | Prevents discriminator overconfidence |
-| **Instance Noise** | Adds small noise to all images | Forces discriminator to learn structure, not pixels |
-| **Label Flipping** | 5% of labels randomly flipped | Prevents generator exploiting patterns |
-| **LeakyReLU** | Passes 20% of negative values | Prevents dead neurons in generator |
-| **Dropout (30%)** | Randomly disables neurons | Keeps discriminator from overpowering generator |
-
-#### What to Watch in Training Output
-
-```
-D acc  → ideally 0.5-0.8. At 1.0 = discriminator too powerful, generator stuck
-D loss → should stay moderate, not collapse to 0
-G loss → should gradually decrease as generator improves
-```
-
----
-
-### 3. `test_StableDiffusion.py` — Stable Diffusion
-
-#### What is Stable Diffusion?
-
-Stable Diffusion generates images from **text descriptions**. It is the most architecturally complex model in this repository, combining four separate components into one seamless pipeline.
-
-#### The Four Components
-
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    STABLE DIFFUSION PIPELINE                        │
-│                                                                     │
-│  Text Prompt                                                        │
-│      │                                                              │
-│      ▼                                                              │
-│  ┌────────┐    text embeddings                                      │
-│  │  CLIP  │ ──────────────────────────────────────►                │
-│  └────────┘                                        │               │
-│  Converts text to                                  │               │
-│  numerical vectors                                 ▼               │
-│                                              ┌──────────┐          │
-│  Pure Random Noise ─────────────────────────►│  UNet    │          │
-│                                              │          │          │
-│                                              │ Denoises │          │
-│                                              │ step by  │          │
-│                                              │ step     │          │
-│                                              │ (guided  │          │
-│                                              │ by text) │          │
-│                                              └────┬─────┘          │
-│                                                   │                │
-│                                                   ▼                │
-│                                              ┌──────────┐          │
-│                                              │   VAE    │          │
-│                                              │ Decoder  │          │
-│                                              └────┬─────┘          │
-│                                                   │                │
-│                                                   ▼                │
-│                                           Generated Image          │
-└─────────────────────────────────────────────────────────────────────┘
-```
-
-| Component | Role | Analogy |
-|-----------|------|---------|
-| **CLIP** | Converts text → numbers | Translator |
-| **Scheduler** | Controls noise removal steps | Metronome |
-| **UNet** | Does the actual denoising | Artist |
-| **VAE** | Decodes final result to viewable image | Printer |
-
-#### The Diffusion Concept
-
-The core innovation of diffusion models:
-
-1. **Forward process (training):** Take a real image → gradually add random noise over ~1000 steps → pure noise
-2. **Reverse process (generation):** Start from pure noise → learn to denoise step by step → image emerges
-
-Think of it as: **crumpling a photo into a ball** (adding noise), then **learning to uncrumple it back** (denoising). The text prompt guides *what* the image should look like as it uncrumples.
-
-#### Positive vs Negative Prompts
-
-```python
-positive_prompt = "A serene sunset over a calm lake"
-# → Steers generation TOWARD these qualities
-
-negative_prompt = "blurry, distorted, low quality"
-# → Steers generation AWAY from these qualities
-```
-
-This dual-prompt system is unique to Stable Diffusion — VAE and GAN had no concept of text guidance.
-
-#### Key Parameters
-
-| Parameter | Value | Effect |
-|-----------|-------|--------|
-| `num_inference_steps` | 20 | Fewer steps = faster but less refined (default: 50) |
-| `height/width` | 256×256 | Smaller = 4× faster (default: 512×512) |
-| `safety_checker` | None | Disabled due to tiny model size mismatch |
-
----
-
-### 4. `test_Transformers.py` — Transformer NLP Applications
-
-#### What are Transformers?
-
-The architecture behind virtually every modern language model — GPT, BERT, Claude, and others. The core innovation is the **attention mechanism**: instead of processing words one by one, transformers look at the **entire sequence at once** and learn which words are most relevant to each other.
-
-**The attention insight:**
-> In the sentence *"The cat sat on the mat because **it** was tired"* — what does "it" refer to? A transformer learns to **pay attention** to "cat" when processing "it", connecting related words regardless of their distance in the sentence.
-
-#### Part 1 — Sentiment Analysis (Text Classification)
-
-Uses **DistilBERT** — a smaller, faster version of BERT (Bidirectional Encoder Representations from Transformers).
-
-```
-Raw Review Text
-      │
-      ▼
-  Tokenizer
-  (text → numbers)
-      │
-      ▼
-  DistilBERT Layers
-  (attention mechanism)
-      │
-      ▼
-  Classification Head
-      │
-      ▼
-  POSITIVE (0.9997) or NEGATIVE (0.9998)
-```
-
-**Why high confidence on these reviews?**
-Both test reviews are unambiguously clear. A mixed review like *"battery great but camera terrible"* would produce a lower confidence score — the model detects conflicting signals.
-
-#### Part 2 — Text Generation (GPT-2)
-
-Uses **GPT-2** — a generative transformer that predicts the next token repeatedly.
-
-```
-[Complaint text] + "Customer service response:" + [starter]
-      │
-      ▼
-  GPT-2 predicts next token
-      │
-      ▼
-  Appends token, predicts next
-      │
-      ▼
-  Repeats until max_length=150
-      │
-      ▼
-  Completed customer service response
-```
-
-**The technique used: Prompt Engineering** — structuring the input with the complaint + response starter to guide GPT-2 toward generating a relevant continuation. This is the same fundamental principle behind modern ChatGPT prompting.
-
-#### Discriminative vs Generative Transformers
-
-| Type | Model | Input | Output | Use Case |
-|------|-------|-------|--------|----------|
-| **Discriminative** | DistilBERT | Full text | Label + score | Classification, Q&A |
-| **Generative** | GPT-2 | Partial text | Text continuation | Writing, completion |
-
-#### Hugging Face Pipeline Tasks Reference
-
-```python
-pipeline("text-classification")      # Sentiment, topic classification
-pipeline("text-generation")          # Continue/complete text
-pipeline("summarization")            # Condense long documents
-pipeline("translation_en_to_fr")     # Language translation
-pipeline("question-answering")       # Extract answers from passages
-pipeline("ner")                      # Find names, places, dates
-pipeline("fill-mask")                # Predict masked words
-pipeline("zero-shot-classification") # Classify without training
-```
-
----
-
-## ⚖️ Architecture Comparisons
-
-### Image Generation: VAE vs GAN vs Stable Diffusion
-
-| Aspect | VAE | GAN | Stable Diffusion |
-|--------|-----|-----|-----------------|
-| **Training** | Single network with two losses | Two competing networks | Pretrained, no training needed |
-| **Input** | Random latent point | Random noise vector | Text prompt |
-| **Output Quality** | Blurry (averages) | Sharp (adversarial) | Very sharp (denoising) |
-| **Speed** | Fast | Medium | Slow (many steps) |
-| **Text guided** | ❌ | ❌ | ✅ |
-| **Interpretable latent** | ✅ (mean + variance) | ❌ | Partial |
-| **Stability** | Very stable | Notoriously tricky | Stable (pretrained) |
-
-### All Four Models: Common Threads
-
-All four models share these fundamental building blocks:
-
-| Concept | VAE | GAN | Stable Diffusion | Transformers |
-|---------|-----|-----|-----------------|-------------|
-| **Normalization** | ÷255 → [0,1] | −127.5÷127.5 → [−1,1] | Built-in | Tokenization |
-| **Loss function** | Recon + KL | Binary crossentropy | Diffusion loss | Cross-entropy |
-| **Latent space** | ✅ Explicit | ✅ Implicit (noise) | ✅ (VAE inside) | ✅ (embeddings) |
-| **Decoder/Generator** | ✅ | ✅ | ✅ (UNet+VAE) | ✅ (GPT-2) |
-| **Backpropagation** | ✅ | ✅ | (pretrained) | (pretrained) |
-
----
-
-## 📖 Key Concepts Glossary
-
-| Term | Definition |
-|------|-----------|
-| **Latent Space** | A compressed numerical representation of data. High-dimensional images become low-dimensional vectors. |
-| **Encoder** | Neural network component that compresses input into latent space. |
-| **Decoder / Generator** | Neural network component that reconstructs/creates output from latent space. |
-| **Normalization** | Scaling input values to a small, consistent range (0–1 or −1 to 1) for stable training. |
-| **Activation Function** | Non-linear transformation applied after each layer. `relu`, `sigmoid`, `tanh`, `LeakyReLU`. |
-| **Loss Function** | Mathematical measure of how wrong the model is. Training minimizes this. |
-| **Backpropagation** | The algorithm that adjusts network weights based on the gradient of the loss. |
-| **Epoch** | One complete pass through the entire training dataset. |
-| **Batch Size** | Number of samples processed per gradient update step. |
-| **Learning Rate** | How large each weight adjustment step is. Too high = unstable. Too low = slow. |
-| **Weights** | The learned numerical parameters inside a neural network. Stored in memory, saveable to disk. |
-| **Dense Layer** | Fully connected layer — every neuron connects to every neuron in the next layer. |
-| **Dropout** | Randomly disabling neurons during training to prevent overfitting. |
-| **BatchNormalization** | Rescaling layer outputs to a stable range after each batch. |
-| **LeakyReLU** | Activation that passes small negatives through (unlike relu which kills them). |
-| **KL Divergence** | Measures how different one probability distribution is from another. Used in VAE loss. |
-| **Attention** | Mechanism that learns which parts of a sequence are most relevant to each other. |
-| **Tokenizer** | Splits raw text into chunks (tokens) and maps each to a number. |
-| **Token** | The basic unit of text a transformer processes (can be a word, subword, or character). |
-| **Embedding** | Dense numerical representation of a token or text in high-dimensional space. |
-| **Prompt Engineering** | Carefully structuring input text to guide model output toward desired results. |
-| **Inference Steps** | Number of denoising iterations in Stable Diffusion. More steps = higher quality but slower. |
-| **Pretrained Model** | A model already trained on massive data, ready to use without further training. |
-| **Fine-tuning** | Further training a pretrained model on a specific task or dataset. |
-| **Hugging Face** | Platform hosting thousands of pretrained models, accessible via the `transformers` library. |
-| **CLIP** | Model that connects text and images by mapping both to a shared numerical space. |
-| **UNet** | Neural network architecture shaped like a U — compresses then expands with skip connections. |
-| **Diffusion** | Process of gradually adding/removing noise from data for generation. |
-
----
-
-## ⚙️ Requirements & Installation
-
-### Python Version
-
-```
-Python 3.8 or higher
-```
-
-### Quick Install
+**3. Install all dependencies**
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### Manual Install
-
-```bash
-# Core ML frameworks
-pip install tensorflow>=2.10
-pip install torch>=2.0
-
-# Image generation
-pip install diffusers>=0.20
-pip install accelerate>=0.20
-
-# NLP
-pip install transformers>=4.30
-
-# Utilities
-pip install numpy>=1.21
-pip install matplotlib>=3.5
-pip install pandas>=1.3
-```
-
-### Full Dependency Table
-
-| Library | Min Version | Used In | Purpose |
-|---------|------------|---------|---------|
-| `tensorflow` | 2.10 | VAE, GAN | Model building and training |
-| `numpy` | 1.21 | VAE, GAN | Array operations and data manipulation |
-| `matplotlib` | 3.5 | VAE, GAN, SD | Visualizing generated images |
-| `torch` | 2.0 | SD, Transformers | PyTorch backend for HuggingFace models |
-| `diffusers` | 0.20 | Stable Diffusion | Stable Diffusion pipeline |
-| `transformers` | 4.30 | SD, Transformers | Pretrained transformer models |
-| `accelerate` | 0.20 | Stable Diffusion | Optimized model loading |
-| `pandas` | 1.3 | Transformers | Results display as tables |
+> **PyTorch note:** The default `torch` install via pip is CPU-only. If you have an NVIDIA GPU and want to use CUDA acceleration, follow the [official PyTorch installation guide](https://pytorch.org/get-started/locally/) to install the GPU-enabled build.
 
 ---
 
-## 🚀 Running the Examples
+## Configuration
 
-### VAE — Variational Autoencoder
+All Track 1 scripts (Gemini API) require a Google AI API key stored in a `.env` file at the project root.
+
+**1. Create your `.env` file**
 
 ```bash
-python test_VAE.py
+touch .env
 ```
 
-**What happens:**
-1. Downloads MNIST dataset (~11MB, cached after)
-2. Trains for 10 epochs on 5,000 images (~1 minute on CPU)
-3. Displays 4×4 grid of 16 generated digit images
+**2. Add your API key**
 
-**Expected output:** Slightly blurry but recognizable digit shapes (blurriness is mathematically expected in VAEs)
+```
+GOOGLE_API_KEY=your_api_key_here
+```
+
+**3. Get an API key**
+
+Visit [Google AI Studio](https://aistudio.google.com/) to generate a free API key. The Gemini 2.5 Flash model used throughout Track 1 has a generous free tier.
+
+All Track 1 scripts load this file automatically using `python-dotenv`, regardless of the subdirectory they are run from:
+
+```python
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), "..", ".env"))
+```
+
+Track 2 scripts (VAE, GAN, Stable Diffusion, Transformers) require no API key.
 
 ---
 
-### GAN — Generative Adversarial Network
-
-```bash
-python test_GAN.py
-```
-
-**What happens:**
-1. Loads MNIST (already cached)
-2. Trains for 5 epochs on 10,000 images (~2 minutes on CPU)
-3. Prints loss/accuracy every 25 batches
-4. Displays 10×10 grid of 100 generated digit images
-
-**Expected output:** Sharper digit-like shapes than VAE. Some may still be noisy at only 5 epochs.
+## Modules
 
 ---
 
-### Stable Diffusion
+### 1. FirstExampleAPIKey — Gemini API Basics
+
+The entry point for Track 1. Three minimal scripts that introduce the `google-genai` SDK with as little code as possible.
+
+| Script | What it does |
+|---|---|
+| `first_ai.py` | Sends `"Hello, world!"` to Gemini 2.5 Flash and prints the response. Validates that your API key and SDK are working correctly. |
+| `list_models.py` | Lists every Gemini model available under your API key. Useful for discovering which models you have access to. |
+| `ask_question.py` | Prompts you to type any question, sends it to Gemini, and prints the answer. Your first interactive AI script. |
+
+**Run:**
 
 ```bash
-python test_StableDiffusion.py
+python FirstExampleAPIKey/first_ai.py
+python FirstExampleAPIKey/list_models.py
+python FirstExampleAPIKey/ask_question.py
 ```
 
-**What happens:**
-1. Downloads tiny-stable-diffusion model (~10MB, first run only)
-2. Runs 20 denoising steps on a text prompt
-3. Saves `image_0.jpg` to current directory
-4. Displays generated image via matplotlib
+**Key concepts introduced:**
 
-**Expected output:** Low quality image (tiny model is for pipeline testing). Swap model ID for a real model for production quality.
+- Initializing `genai.Client` with an API key
+- `client.models.generate_content()` — the core API call
+- Specifying a model by name (`gemini-2.5-flash`)
+- Accessing the response via `.text`
 
 ---
 
-### Transformers
+### 2. SummaryExampleAPI — Text Summarization
+
+Three progressively more capable summarization tools, all using the same Gemini API call but with increasingly sophisticated input handling.
+
+| Script | What it does |
+|---|---|
+| `summarize.py` | Summarizes a hardcoded paragraph about AI in 2 sentences. Demonstrates the most basic prompt pattern. |
+| `summarize_input.py` | Multi-line interactive input mode. Paste any text, type `END` on a new line to finish, then select summary length (1 sentence / 3 sentences / 1 paragraph). |
+| `summarize_file.py` | Automatically loads `datasets/summarization_dataset.txt` and summarizes the full document in one paragraph. |
+
+**Run:**
 
 ```bash
-python test_Transformers.py
+python SummaryExampleAPI/summarize.py
+python SummaryExampleAPI/summarize_input.py
+python SummaryExampleAPI/summarize_file.py
 ```
 
-**What happens:**
-1. Downloads DistilBERT (~250MB, first run only)
-2. Classifies both reviews with confidence scores
-3. Downloads GPT-2 (~500MB, first run only)
-4. Generates customer service response continuation
+**Key concepts introduced:**
+
+- Prompt engineering — embedding instructions inside the `contents` string
+- Dynamic prompts using f-strings: `f"Summarize the following text in {length}: {text}"`
+- Reading from files and passing large text bodies to the API
+- User-driven output control (length selection menu)
+
+---
+
+### 3. ChatBotExample — Stateless vs Stateful Chatbots
+
+Two chatbots that appear identical from the outside but behave fundamentally differently because of how (or whether) they maintain conversation history.
+
+| Script | What it does |
+|---|---|
+| `chatbot.py` | **Stateless.** Each message is sent in isolation. The model has no memory of previous turns. Every question is answered as if it is the first message of a new conversation. |
+| `chatbot_memory.py` | **Stateful.** Every message and reply is appended to a `history` list. The full list is sent to the model on every turn, giving it complete context of the conversation so far. |
+
+**Run:**
+
+```bash
+python ChatBotExample/chatbot.py
+python ChatBotExample/chatbot_memory.py
+```
+
+Type `quit` to exit.
+
+**Key concepts introduced:**
+
+- Stateless vs stateful API design
+- Conversation history as a list of `{"role": ..., "parts": [...]}` dictionaries
+- The `role` field: `"user"` for human turns, `"model"` for AI replies
+- How context window works: sending the full history on each API call
+- The practical cost of memory: history grows with every turn, consuming tokens
+
+**Demonstration:**
+
+Run both chatbots. In the first message, say `"My name is Alex"`. In the second message, ask `"What is my name?"`. The stateless bot will not know. The memory bot will answer correctly.
+
+**How the history list grows:**
+
+```
+Turn 1:  history = [{user: "My name is Alex"}, {model: "Nice to meet you, Alex!"}]
+Turn 2:  history = [{user: "..."}, {model: "..."}, {user: "What is my name?"}, {model: "Your name is Alex."}]
+Turn 3:  history = [...previous 4 entries..., {user: "..."}, {model: "..."}]
+```
+
+---
+
+### 4. PDFSummaryExample — PDF Understanding and Q&A
+
+Demonstrates Gemini's **multimodal** capability — the model reads and understands a PDF document's content directly, without any text extraction or preprocessing on your side.
+
+| Script | What it does |
+|---|---|
+| `pdf_summary.py` | Loads `datasets/sample.pdf`, encodes it as base64, sends it to Gemini as a `Part` object alongside a text instruction, and prints a one-paragraph summary. |
+| `pdf_summary_advanced.py` | Loads the PDF, lets you choose summary depth (short / medium / detailed), prints the summary, then enters an interactive Q&A loop where you can ask any question about the PDF's content. |
+
+**Run:**
+
+```bash
+python PDFSummaryExample/pdf_summary.py
+python PDFSummaryExample/pdf_summary_advanced.py
+```
+
+Ensure `datasets/sample.pdf` exists before running. Type `quit` to exit the Q&A loop.
+
+**Key concepts introduced:**
+
+- Sending binary data to a multimodal model using `types.Part.from_bytes()`
+- `mime_type` specification (`"application/pdf"`)
+- Combining a binary part and a text instruction in a single `contents` list
+- Interactive Q&A over a fixed document — the PDF is sent on every question, keeping the model's context anchored to its content
+
+**How Gemini handles PDFs:**
+
+```
+PDF bytes → base64 encoded → Part.from_bytes(data, mime_type="application/pdf")
+                                         │
+                                         ▼
+         contents = [pdf_part, "Summarize this PDF in one paragraph."]
+                                         │
+                                         ▼
+                              Gemini processes both inputs
+                              and returns a text response
+```
+
+---
+
+### 5. PythonCodeTest — Core ML Model Implementations
+
+Five standalone scripts implementing foundational generative AI architectures. No API key required. Each script is extensively commented to explain every design decision, hyperparameter, and layer choice.
+
+---
+
+#### test_VAE.py — Variational Autoencoder
+
+**Framework:** TensorFlow / Keras
+**Dataset:** MNIST handwritten digits (auto-downloaded, ~11 MB)
+**Training time:** ~2–3 minutes on CPU
+
+**What is a VAE?**
+
+A Variational Autoencoder learns to compress images into a compact numerical representation and reconstruct them. The key differentiator from a standard autoencoder: instead of compressing to exact numbers, it compresses to a *distribution* — defined by a mean and variance. This means you can sample a random point from that distribution and generate a brand new image.
+
+**Architecture:**
+
+```
+ENCODER
+  Input (28×28) → Flatten (784) → Dense(128, relu)
+                                        ├─► z_mean    (2)
+                                        └─► z_log_var (2)
+
+SAMPLING LAYER
+  z = z_mean + exp(0.5 × z_log_var) × ε   (ε = random noise)
+
+DECODER
+  z (2) → Dense(128, relu) → Dense(784, sigmoid) → Reshape (28×28)
+```
+
+**Why 2 dimensions?** A 2D latent space can be visualized directly on an X-Y plot. Real applications use 64–256 dimensions for sharper results.
+
+**The two losses:**
+
+| Loss | What it measures | Why it is needed |
+|---|---|---|
+| Reconstruction loss | Pixel-by-pixel difference between input and output | Forces the decoder to rebuild images accurately |
+| KL divergence loss | How far the learned distribution deviates from a standard normal | Keeps the latent space organized so random sampling produces meaningful images |
+
+Without KL loss, the encoder could output wild, scattered ranges that reconstruct well but produce garbage when you sample random points for generation.
+
+**Run:**
+
+```bash
+python PythonCodeTest/test_VAE.py
+```
+
+**Output:** A 4×4 matplotlib grid of 16 generated digit images invented from random latent points — never seen during training.
+
+**Expected appearance:** Slightly blurry. This is mathematically expected — VAE optimizes for pixel-level average similarity, which produces smooth but imprecise outputs. Increase `latent_dim` to 32 or 64 for sharper results at the cost of longer training.
+
+---
+
+#### test_GAN.py — Generative Adversarial Network
+
+**Framework:** TensorFlow / Keras
+**Dataset:** MNIST (30,000 samples)
+**Training time:** ~5–10 minutes on CPU
+
+**What is a GAN?**
+
+A GAN trains two neural networks in direct competition:
+
+- **Generator** — creates fake images from random noise. Goal: fool the discriminator.
+- **Discriminator** — classifies images as real or fake. Goal: catch the generator.
+
+They improve by competing. The generator gets better at faking; the discriminator gets better at detecting. Think of it as **Counterfeiter vs Detective** — both become more skilled through the adversarial relationship.
+
+**Architecture:**
+
+```
+GENERATOR
+  100 noise → Dense(256) → Dense(512) → Dense(1024) → Dense(784, tanh) → Reshape(28×28×1)
+               LeakyReLU    LeakyReLU    LeakyReLU
+               BatchNorm    BatchNorm    BatchNorm
+
+DISCRIMINATOR
+  Image(28×28×1) → Flatten(784) → Dense(512) → Dense(256) → Dense(1, sigmoid)
+                                   LeakyReLU    LeakyReLU    0=Fake / 1=Real
+                                   Dropout      Dropout
+```
+
+**Training loop (per batch):**
+
+```
+Step 1 — Train Discriminator (Generator frozen):
+  Real images + smooth labels (~0.8–1.0) → discriminator.train_on_batch()
+  Fake images + smooth labels (~0.0–0.2) → discriminator.train_on_batch()
+
+Step 2 — Train Generator (Discriminator frozen):
+  Noise → Generator → Fake image → Discriminator
+  Target label ~1.0 — "these fakes should be called real"
+  Only generator weights update
+```
+
+**Stability techniques used:**
+
+| Technique | Effect |
+|---|---|
+| Label smoothing | Real labels ~0.9 (not 1.0), fake labels ~0.1 (not 0.0) — prevents discriminator overconfidence |
+| Instance noise | Small Gaussian noise added to images — forces discriminator to learn structure, not memorize pixels |
+| Label flipping | 5% of generator training labels randomly flipped — prevents generator exploiting discriminator patterns |
+| LeakyReLU | Passes 20% of negative values through — prevents dead neurons |
+| Dropout (30%) | Randomly disables neurons — keeps discriminator from becoming too powerful too fast |
+
+**What to watch during training:**
+
+```
+D acc  → Ideally 0.5–0.8. At 1.0 = discriminator too powerful, generator gets no useful feedback.
+D loss → Should stay moderate, not collapse to 0.
+G loss → Should gradually decrease as generator improves.
+```
+
+**Run:**
+
+```bash
+python PythonCodeTest/test_GAN.py
+```
+
+**Output:** A 10×10 matplotlib grid of 100 generated digit images. Noticeably sharper than VAE output, because GAN optimizes for perceptual realism (fooling a discriminator) rather than pixel-level average.
+
+---
+
+#### test_StableDiffusion.py — Text-to-Image Generation
+
+**Framework:** PyTorch + Hugging Face Diffusers
+**Model:** `nota-ai/bk-sdm-tiny` (CPU-friendly, small download)
+**Runtime:** ~1–3 minutes on CPU
+
+**What is Stable Diffusion?**
+
+Stable Diffusion generates images from text descriptions. It is the most architecturally complex model here — combining four components into one seamless pipeline.
+
+**The four components:**
+
+| Component | Role |
+|---|---|
+| **CLIP** | Converts your text prompt into numerical embeddings that guide generation |
+| **Scheduler** | Controls how many denoising steps to run and how large each step is |
+| **UNet** | Does the actual denoising — takes noisy latent + text embeddings, predicts denoised version |
+| **VAE** | Decodes the final denoised latent into a viewable pixel image |
+
+**The diffusion concept:**
+
+```
+FORWARD PROCESS (training, not run here):
+  Real image → add noise (step 1) → add more noise (step 2) → ... → pure noise (step 1000)
+
+REVERSE PROCESS (generation, what this script does):
+  Pure noise → UNet denoise (step 1) → ... → UNet denoise (step 20) → VAE decode → image
+                      ↑
+              guided at every step by CLIP text embeddings
+```
+
+Think of it as: **crumpling a photograph into a ball** (forward: adding noise), then **learning to uncrumple it back** (reverse: denoising). The text prompt tells the model *what image* to uncrumple toward.
+
+**Full generation pipeline:**
+
+```
+Text: "A serene sunset over a calm lake"
+         │
+         ▼
+     CLIP encoder
+         │ (text embeddings)
+         ▼
+     Pure random noise + text embeddings
+         │
+         ▼ (×20 denoising steps)
+     UNet (guided by text at each step)
+         │
+         ▼
+     VAE decoder
+         │
+         ▼
+     Generated image (saved as image_0.jpg)
+```
+
+**Positive and negative prompts:**
+
+```python
+positive_prompt = "A serene sunset over a calm lake"
+# Steers generation TOWARD these qualities
+
+negative_prompt = "blurry, distorted, low quality"
+# Steers generation AWAY from these qualities
+```
+
+This dual-prompt system is unique to Stable Diffusion — VAE and GAN have no concept of text guidance.
+
+**CPU optimizations applied:**
+
+| Setting | This repo | Production default | Why reduced |
+|---|---|---|---|
+| Model size | ~MB (tiny) | ~4 GB (v1.5) | Download and RAM constraints |
+| dtype | `float32` | `float16` | `float16` requires GPU |
+| Inference steps | 20 | 50 | 2.5× faster |
+| Resolution | 256×256 | 512×512 | 4× fewer pixels = ~4× faster |
+
+**Run:**
+
+```bash
+python PythonCodeTest/test_StableDiffusion.py
+```
+
+**Output:** A JPEG image saved as `image_0.jpg` and displayed via matplotlib. Quality will be limited by the tiny model — swap in `runwayml/stable-diffusion-v1-5` for production quality (requires ~4 GB download and 8 GB RAM).
+
+---
+
+#### test_Transformers.py — Sentiment Analysis and Text Generation
+
+**Framework:** PyTorch + Hugging Face Transformers
+**Models:** DistilBERT (~250 MB), GPT-2 (~500 MB) — downloaded once, cached
+**Runtime:** ~1–2 minutes on CPU
+
+**What are Transformers?**
+
+The architecture behind virtually every modern language model — GPT, BERT, Claude, and others. The core innovation is the **attention mechanism**: instead of processing words one by one (as older RNNs did), transformers look at the entire sequence at once and learn which words are most relevant to each other.
+
+**The attention insight:**
+
+> In `"The cat sat on the mat because it was tired"` — the transformer learns that `"it"` refers to `"cat"` by attending to the most contextually relevant word, regardless of distance in the sentence.
+
+This script demonstrates two types of transformer, back to back, using the same `pipeline()` interface.
+
+---
+
+**Part 1 — Text Classification (DistilBERT)**
+
+*Task: determine whether an iPhone review is positive or negative.*
+
+```
+Raw review text
+      │
+      ▼ Tokenizer: "I love cats" → ["I", "love", "cats"] → [101, 2293, 8870]
+      │
+      ▼ DistilBERT attention layers
+        (bidirectional — reads the full sentence both ways)
+      │
+      ▼ Classification head
+      │
+      ▼ POSITIVE (0.9997) or NEGATIVE (0.9998)
+```
+
+DistilBERT is a *discriminative* transformer — it reads and understands text to output a label. It was pretrained on Wikipedia and BooksCorpus, then fine-tuned on the SST-2 movie review sentiment dataset.
 
 **Expected output:**
+
 ```
 Negative Review Result:
       label     score
@@ -596,98 +606,277 @@ Negative Review Result:
 Positive Review Result:
       label     score
 0  POSITIVE  0.999711
+```
 
-Generated Customer Service Response:
-[full complaint + generated continuation...]
+Both are high confidence because the test reviews are unambiguous. A mixed review like `"battery great but camera terrible"` would score lower — conflicting signals produce less certain output.
+
+---
+
+**Part 2 — Text Generation (GPT-2)**
+
+*Task: continue a customer service response given the complaint that triggered it.*
+
+```
+[Complaint text] + "\n\nCustomer service response:\n" + [starter sentence]
+      │
+      ▼ GPT-2: predict next token → append → predict next → append → ...
+                (repeats until max_length=150 tokens reached)
+      │
+      ▼ Completed response continuation
+```
+
+GPT-2 is a *generative* transformer — it predicts the next token given all previous tokens, one token at a time. It reads left to right (unidirectional), unlike DistilBERT's bidirectional reading.
+
+The technique of structuring input carefully to guide generation is called **prompt engineering** — the same principle behind modern ChatGPT and Claude prompting.
+
+**Discriminative vs Generative — side by side:**
+
+| Property | DistilBERT (discriminative) | GPT-2 (generative) |
+|---|---|---|
+| Direction | Bidirectional (reads both ways) | Left-to-right only |
+| Task | Understand → classify | Predict → generate |
+| Input | Full text at once | Partial text (prompt) |
+| Output | Label + score | Text continuation |
+
+**Run:**
+
+```bash
+python PythonCodeTest/test_Transformers.py
+```
+
+**Hugging Face pipeline tasks reference:**
+
+```python
+pipeline("text-classification")       # Sentiment, topic classification
+pipeline("text-generation")           # Continue/complete text (GPT-style)
+pipeline("summarization")             # Condense long documents
+pipeline("translation_en_to_fr")      # Translate between languages
+pipeline("question-answering")        # Extract answers from a passage
+pipeline("ner")                       # Named entity recognition (names, places, dates)
+pipeline("fill-mask")                 # Predict a masked word in a sentence
+pipeline("zero-shot-classification")  # Classify without task-specific training
 ```
 
 ---
 
-## 💻 Laptop-Friendly Optimizations
+#### test_encodeDecode.py — Run-Length Encoding
 
-All examples are designed to run on a **standard CPU laptop** without any GPU. Here is what was reduced from typical production settings and why:
+A pure Python utility implementing run-length encoding (RLE) — a simple lossless compression algorithm that replaces repeated characters with a count and character pair.
 
-| File | Default (Production) | This Repo (Laptop) | Speedup |
-|------|---------------------|-------------------|---------|
-| `test_VAE.py` | 60,000 samples, Dense(512), 100 epochs | 5,000 samples, Dense(128), 10 epochs | ~50× faster |
-| `test_GAN.py` | 60,000 samples, 50 epochs | 10,000 samples, 5 epochs | ~30× faster |
-| `test_StableDiffusion.py` | Full SD v1.5 (4GB), 512×512, 50 steps | Tiny model (10MB), 256×256, 20 steps | ~100× faster |
-| `test_Transformers.py` | Custom fine-tuned models | DistilBERT + GPT-2 (smallest capable) | Optimal |
+**How RLE works:**
 
-### Saving Trained Models
+```
+Input text:    "AAABBBCCDDDDEE"
+Encoded pairs: [(A,3), (B,3), (C,2), (D,4), (E,2)]
+File format:   3,65\n3,66\n2,67\n4,68\n2,69
+                     ↑
+               ASCII ordinal (A=65, B=66, ...)
+```
 
-By default, trained weights exist **only in memory** and are lost when the script ends. To save and reuse:
+The script reads `datasets/sampleText.txt`, encodes it to `datasets/sampleText_encoded.txt`, then decodes the encoded file back to `datasets/sampleText_decoded.txt`, printing file sizes at each step.
+
+**Run:**
+
+```bash
+python PythonCodeTest/test_encodeDecode.py
+```
+
+**Key concepts introduced:**
+
+- Run-length encoding as a general compression principle
+- Using `ord()` and `chr()` to convert between characters and ASCII codes
+- File I/O with context managers
+- Measuring compression ratio via `os.path.getsize()`
+
+---
+
+## Datasets
+
+All datasets live in the `datasets/` folder at the project root — shared across all modules.
+
+| File | Used by | Description |
+|---|---|---|
+| `summarization_dataset.txt` | `SummaryExampleAPI/summarize_file.py` | Long-form text document for file-based summarization |
+| `sample.pdf` | `PDFSummaryExample/*.py` | PDF document for multimodal summarization and Q&A |
+| `sampleText.txt` | `PythonCodeTest/test_encodeDecode.py` | Plain text for run-length encoding testing |
+| `sampleText_encoded.txt` | Auto-generated | Run-length encoded output (created on first run) |
+| `sampleText_decoded.txt` | Auto-generated | Decoded reconstruction (created on first run) |
+
+Scripts reference the datasets folder using a root-relative path:
 
 ```python
-# Save after training
-generator.save('generator.h5')          # GAN generator
-vae.encoder.save('vae_encoder.h5')      # VAE encoder
-vae.decoder.save('vae_decoder.h5')      # VAE decoder
+os.path.join(os.path.dirname(__file__), '..', 'datasets', 'filename.txt')
+```
 
-# Load next time (skip retraining)
+This resolves correctly regardless of which subdirectory you invoke Python from.
+
+---
+
+## Architecture Comparisons
+
+### Image Generation: VAE vs GAN vs Stable Diffusion
+
+| Aspect | VAE | GAN | Stable Diffusion |
+|---|---|---|---|
+| Training | Single model, dual loss | Two competing models | Pretrained — no training here |
+| Input at generation | Random latent point (2D) | Random noise vector (100D) | Text prompt |
+| Output quality | Blurry (pixel averaging) | Sharp (adversarial pressure) | Very sharp (iterative denoising) |
+| Text guidance | No | No | Yes |
+| Interpretable latent | Yes (mean + variance) | No | Partial |
+| Training stability | Very stable | Notoriously tricky | Stable (pretrained) |
+| GPU requirement | No | No | No (slow on CPU) |
+
+### VAE vs GAN — Why the output quality differs
+
+| Model | Optimization target | Result |
+|---|---|---|
+| VAE | Minimize average pixel difference between input and reconstruction | Blurry — averaging many plausible outputs produces a blurry mean |
+| GAN | Generate images realistic enough to fool a trained classifier | Sharp — must look convincingly real, not just statistically average |
+
+### All Four Models — Common Building Blocks
+
+| Concept | VAE | GAN | Stable Diffusion | Transformers |
+|---|---|---|---|---|
+| Normalization | ÷255 → [0,1] | −127.5÷127.5 → [−1,1] | Built-in | Tokenization |
+| Loss function | Reconstruction + KL | Binary crossentropy | Diffusion loss | Cross-entropy |
+| Latent space | Explicit (2D) | Implicit (100D noise) | VAE inside | Token embeddings |
+| Generation | Decoder | Generator | UNet + VAE | GPT-2 |
+| Framework | TensorFlow | TensorFlow | PyTorch | PyTorch |
+
+---
+
+## Key Concepts Glossary
+
+| Term | Definition |
+|---|---|
+| **Latent space** | A compressed numerical representation of data. VAE maps a 784-pixel image to 2 numbers. |
+| **Encoder** | Neural network that compresses input into latent space. |
+| **Decoder / Generator** | Neural network that reconstructs or creates output from latent space. |
+| **Normalization** | Scaling input values to a small, consistent range (0–1 or −1 to 1) for stable training. |
+| **Activation function** | Non-linear transformation after each layer. `relu`, `sigmoid`, `tanh`, `LeakyReLU`. |
+| **Loss function** | Mathematical measure of how wrong the model is. Training minimizes this. |
+| **Backpropagation** | Algorithm that adjusts weights based on the gradient of the loss. |
+| **Epoch** | One complete pass through the entire training dataset. |
+| **Batch size** | Number of samples processed per gradient update step. |
+| **Learning rate** | How large each weight update step is. Too high = unstable. Too low = slow. |
+| **Dense layer** | Fully connected layer — every input neuron connects to every output neuron. |
+| **Dropout** | Randomly disabling neurons during training to prevent overfitting and overconfidence. |
+| **BatchNormalization** | Rescaling layer outputs to a stable range after each batch. |
+| **LeakyReLU** | Activation that lets small negatives pass through (20%) unlike relu which kills them entirely. |
+| **KL divergence** | Measures how different one probability distribution is from another. Used in VAE loss. |
+| **Attention** | Mechanism that learns which parts of a sequence are most relevant to each other. Core of transformers. |
+| **Tokenizer** | Splits raw text into chunks (tokens) and maps each to a number. |
+| **Token** | The basic unit of text a transformer processes — can be a word, subword, or character. |
+| **Embedding** | Dense numerical vector representing a token in high-dimensional space. |
+| **Prompt engineering** | Carefully structuring input text to guide model output toward a desired result. |
+| **Inference steps** | Number of denoising iterations in Stable Diffusion. More steps = higher quality, slower. |
+| **Pretrained model** | A model already trained on massive data, downloadable and usable without further training. |
+| **Fine-tuning** | Further training a pretrained model on a specific task or dataset. |
+| **CLIP** | Model trained to understand the relationship between images and text. |
+| **UNet** | Neural network shaped like a U — compresses down then expands back up with skip connections. |
+| **Diffusion** | Process of gradually adding noise to data, then learning to reverse it for generation. |
+| **Label smoothing** | Using soft labels (0.9 instead of 1.0) to prevent model overconfidence during training. |
+| **Instance noise** | Adding small Gaussian noise to training images to prevent memorization of exact pixel patterns. |
+| **Stateless** | Each API call has no knowledge of previous calls — no conversation memory. |
+| **Stateful** | Conversation history is maintained and sent to the model on every turn. |
+| **Multimodal** | A model that can process more than one type of input — e.g., text and images or PDFs together. |
+| **Hugging Face** | Platform hosting thousands of pretrained models, downloadable via the `transformers` library. |
+
+---
+
+## Laptop-Friendly Optimizations
+
+All examples are designed to run on a standard CPU laptop. Here is what was reduced from typical production settings and why:
+
+| File | Production setting | This repo | Approximate speedup |
+|---|---|---|---|
+| `test_VAE.py` | 60,000 samples, Dense(512), latent_dim=128, 100 epochs | 5,000 samples, Dense(128), latent_dim=2, 10 epochs | ~50× faster |
+| `test_GAN.py` | 60,000 samples, 50 epochs | 30,000 samples, 15 epochs | ~6× faster |
+| `test_StableDiffusion.py` | SD v1.5 (4 GB), 512×512, 50 steps, float16 | Tiny model (MB), 256×256, 20 steps, float32 | ~100× faster |
+| `test_Transformers.py` | Large fine-tuned models | DistilBERT + GPT-2 (smallest capable public models) | Optimal for CPU |
+
+### Saving Trained Models (Optional)
+
+By default, trained weights exist only in memory and are lost when the script ends. To save and reload without retraining:
+
+```python
+# After training — TensorFlow / Keras
+generator.save('generator.keras')
+vae.encoder.save('vae_encoder.keras')
+vae.decoder.save('vae_decoder.keras')
+
+# To reload next time
 from tensorflow.keras.models import load_model
-generator = load_model('generator.h5')
+generator = load_model('generator.keras')
 ```
-
-**Approximate saved file sizes for this repo's models:**
-
-| Model | File Size |
-|-------|----------|
-| VAE Encoder | ~1-2 MB |
-| VAE Decoder | ~1-2 MB |
-| GAN Generator | ~3-5 MB |
-| GAN Discriminator | ~3-5 MB |
 
 ---
 
-## 📦 Model Downloads Reference
+## Model Downloads Reference
 
-All Hugging Face models are downloaded on first run and cached at `~/.cache/huggingface/`.
+Hugging Face models are downloaded on first run and cached at `~/.cache/huggingface/`. Subsequent runs use the local cache.
 
-| File | Model ID | Size | Download Time (est.) |
-|------|----------|------|---------------------|
-| `test_StableDiffusion.py` | `hf-internal-testing/tiny-stable-diffusion-pipe` | ~10 MB | Seconds |
-| `test_Transformers.py` | `distilbert-base-uncased-finetuned-sst-2-english` | ~250 MB | ~1 min |
-| `test_Transformers.py` | `gpt2` | ~500 MB | ~2 min |
+| Script | Model | Size | Notes |
+|---|---|---|---|
+| `test_StableDiffusion.py` | `nota-ai/bk-sdm-tiny` | ~few MB | Fast, low quality — good for pipeline testing |
+| `test_Transformers.py` | `distilbert-base-uncased-finetuned-sst-2-english` | ~250 MB | Default text-classification model |
+| `test_Transformers.py` | `gpt2` | ~500 MB | Lightest real generative model |
 
-**To use full quality Stable Diffusion** (requires ~4GB disk and ~8GB RAM):
+**For production quality Stable Diffusion** (requires ~4 GB disk, ~8 GB RAM):
+
 ```python
-# Replace model_id in test_StableDiffusion.py with:
+# In test_StableDiffusion.py, replace model_id with:
 model_id = "runwayml/stable-diffusion-v1-5"
 ```
 
 ---
 
-## 🔧 Troubleshooting
+## Troubleshooting
 
-### VAE / GAN: `ModuleNotFoundError: No module named 'tensorflow'`
+**VAE / GAN: `ModuleNotFoundError: No module named 'tensorflow'`**
+
 ```bash
 pip install tensorflow
 ```
 
-### Stable Diffusion: `ValueError: Input image size doesn't match model`
-Add `safety_checker=None` to `from_pretrained()`:
+**Stable Diffusion: `ValueError: Input image size doesn't match model`**
+
+Ensure `safety_checker=None` is passed to `from_pretrained()`:
+
 ```python
 pipeline = StableDiffusionPipeline.from_pretrained(model_id, safety_checker=None)
 ```
 
-### Stable Diffusion: Out of Memory
-Reduce image size further:
+**Stable Diffusion: Out of memory on CPU**
+
+Reduce resolution and steps further:
+
 ```python
 image = pipeline(prompt=prompt, height=128, width=128, num_inference_steps=10).images[0]
 ```
 
-### Transformers: Slow first run
-Normal — models are downloading. Check `~/.cache/huggingface/` to confirm download progress.
+**Transformers: Very slow first run**
 
-### GAN: Generated images completely black/white
-The model needs more epochs. Increase:
+Normal — models are downloading (~750 MB total). Check `~/.cache/huggingface/` to confirm progress.
+
+**GAN: Generated images are all black or all white**
+
+The model needs more training. Increase epochs:
+
 ```python
-train(epochs=15, batch_size=64)
+train(epochs=30, batch_size=64)
 ```
 
-### General: Want to speed things up further
-For all TensorFlow files, disable GPU warnings:
+**Track 1: `GOOGLE_API_KEY` not found**
+
+Ensure your `.env` file exists at the project root (not inside a subdirectory) and contains:
+
+```
+GOOGLE_API_KEY=your_actual_key_here
+```
+
+**General: Suppress TensorFlow startup warnings**
+
 ```python
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
@@ -695,63 +884,10 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 ---
 
-## 📄 License
+## License
 
-This project is licensed under the **MIT License**.
-
-```
-MIT License
-
-Copyright (c) 2025 Varun Sharma
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
 
 ---
 
-## 🙌 Acknowledgements
-
-| Resource | Contribution |
-|----------|-------------|
-| [TensorFlow / Keras](https://www.tensorflow.org/) | VAE and GAN model building and training |
-| [PyTorch](https://pytorch.org/) | Backend for Stable Diffusion and Transformers |
-| [Hugging Face](https://huggingface.co/) | `diffusers` and `transformers` libraries + model hosting |
-| [MNIST Dataset](http://yann.lecun.com/exdb/mnist/) | Handwritten digit benchmark dataset by Yann LeCun |
-| [OpenAI GPT-2](https://openai.com/research/language-unsupervised) | Generative language model |
-| [Google DistilBERT](https://huggingface.co/distilbert-base-uncased) | Efficient text classification model |
-| [Stability AI](https://stability.ai/) | Stable Diffusion architecture and weights |
-
----
-
-## 🔮 What's Next
-
-Having completed these four foundations, natural next steps include:
-
-| Topic | Builds On | What You'd Learn |
-|-------|-----------|-----------------|
-| **Convolutional VAE** | VAE | Use Conv layers instead of Dense for sharper images |
-| **DCGAN** | GAN | Deep Convolutional GAN — industry standard for image generation |
-| **BERT Fine-tuning** | Transformers | Train a pretrained model on your own classification task |
-| **LangChain** | Transformers | Chain multiple LLM calls into complex workflows |
-| **RAG (Retrieval Augmented Generation)** | Transformers | Give LLMs access to your own documents |
-| **LoRA Fine-tuning** | Stable Diffusion | Fine-tune SD on custom image styles efficiently |
-
----
-
-*Every file in this repository is written to be read like a textbook. The best way to use it is to open a file, run it, and read every comment from top to bottom.*
+*The best way to use this repository is to open a script, run it, and read every comment from top to bottom while the output appears. The comments are the tutorial.*
