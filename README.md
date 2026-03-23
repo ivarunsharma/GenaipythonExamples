@@ -20,6 +20,7 @@ A collection of Generative AI tools and conversational agents focusing on conten
 
 ## 📁 Project Structure
 
+```
 GENAIPYTHONEXAMPLES/
 ├── .env                                 
 ├── datasets/
@@ -27,7 +28,7 @@ GENAIPYTHONEXAMPLES/
 ├── SummaryExampleAPI/
 ├── ChatBotExample/
 └── README.md
-
+```
 
 ##Getting Started
 Prerequisites
