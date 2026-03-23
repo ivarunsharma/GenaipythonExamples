@@ -1,0 +1,34 @@
+# ══════════════════════════════════════════════════════════════════════════════
+# requirements.txt — GenAI Python Examples
+# ──────────────────────────────────────────────────────────────────────────────
+# Install all dependencies with:
+#   pip install -r requirements.txt
+# ══════════════════════════════════════════════════════════════════════════════
+
+
+# ── Core ML Frameworks ─────────────────────────────────────────────────────────
+# Used in: test_VAE.py, test_GAN.py
+tensorflow>=2.10
+
+# Used in: test_StableDiffusion.py, test_Transformers.py
+torch>=2.0
+
+
+# ── Image Generation ───────────────────────────────────────────────────────────
+# Used in: test_StableDiffusion.py
+diffusers>=0.20
+accelerate>=0.20
+
+
+# ── NLP / Transformers ─────────────────────────────────────────────────────────
+# Used in: test_StableDiffusion.py, test_Transformers.py
+transformers>=4.30
+
+
+# ── Data & Visualization ───────────────────────────────────────────────────────
+# Used in: test_VAE.py, test_GAN.py, test_StableDiffusion.py
+numpy>=1.21
+matplotlib>=3.5
+
+# Used in: test_Transformers.py
+pandas>=1.3
