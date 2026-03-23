@@ -46,7 +46,7 @@ def decodeFile(filename):
 # --- Main ---
 
 if __name__ == '__main__':
-    file_path = os.path.join(os.path.dirname(__file__), 'datasets', 'sampleText.txt')
+    file_path = os.path.join(os.path.dirname(__file__), '..', 'datasets', 'sampleText.txt')
     encoded_path = file_path.replace('.txt', '_encoded.txt')
 
     print(f'Original file size: {os.path.getsize(file_path)}')
