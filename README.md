@@ -15,11 +15,12 @@ Every file is written to be **read like a textbook**. Inline comments explain no
 - [Installation](#installation)
 - [Configuration](#configuration)
 - [Modules](#modules)
-  - [1. FirstExampleAPIKey — Gemini API Basics](#1-firstexampleapikey--gemini-api-basics)
+  - [1. GoogleAPIExample — Gemini API Basics](#1-googleapiexample--gemini-api-basics)
   - [2. SummaryExampleAPI — Text Summarization](#2-summaryexampleapi--text-summarization)
   - [3. ChatBotExample — Stateless vs Stateful Chatbots](#3-chatbotexample--stateless-vs-stateful-chatbots)
   - [4. PDFSummaryExample — PDF Understanding and Q&A](#4-pdfsummaryexample--pdf-understanding-and-qa)
-  - [5. PythonCodeTest — Core ML Model Implementations](#5-pythoncodetest--core-ml-model-implementations)
+  - [5. AzureOpenAIExample — Azure OpenAI Chat Completion](#5-azureopenaiexample--azure-openai-chat-completion)
+  - [6. PythonCodeTest — Core ML Model Implementations](#6-pythoncodetest--core-ml-model-implementations)
 - [Datasets](#datasets)
 - [Architecture Comparisons](#architecture-comparisons)
 - [Key Concepts Glossary](#key-concepts-glossary)
@@ -37,6 +38,9 @@ This repository is structured as a two-track learning path through Generative AI
 **Track 1 — Cloud AI APIs (Google Gemini)**
 Work with Google's Gemini 2.5 Flash model via the `google-genai` SDK. No GPU or local training required. These examples teach how to call a production-grade language model, build prompt-engineered requests, manage multi-turn conversation history, and process multimodal inputs such as PDFs.
 
+**Track 1.5 — Cloud AI APIs (Azure OpenAI)**
+Call OpenAI models (GPT-4, GPT-3.5, etc.) through Microsoft Azure using the `openai` Python SDK and `AzureOpenAI` client. Demonstrates how enterprise deployments differ from direct OpenAI access — using deployment names, versioned API endpoints, and Azure-managed authentication.
+
 **Track 2 — Local ML Model Implementation (TensorFlow / PyTorch)**
 Build and train generative models from scratch using real datasets, with no API key required. These examples teach the fundamental architectures that power modern AI — from VAEs and GANs to Stable Diffusion and Transformers.
 
@@ -50,7 +54,7 @@ Both tracks reinforce each other: the cloud API examples show you what modern AI
 ┌──────────────────────────────────────────────────────────────────────────────┐
 │  TRACK 1 — Cloud AI APIs (Google Gemini)                                     │
 │                                                                              │
-│  1. FirstExampleAPIKey                                                       │
+│  1. GoogleAPIExample                                                       │
 │     Send your first message → list models → interactive Q&A                 │
 │           │                                                                  │
 │           ▼                                                                  │
@@ -64,6 +68,13 @@ Both tracks reinforce each other: the cloud API examples show you what modern AI
 │           ▼                                                                  │
 │  4. PDFSummaryExample                                                        │
 │     Multimodal PDF summary → interactive PDF Q&A loop                       │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│  TRACK 1.5 — Cloud AI APIs (Azure OpenAI)                                    │
+│                                                                              │
+│  5. AzureOpenAIExample                                                       │
+│     Azure-hosted GPT model → chat completion → usage and metadata           │
 └──────────────────────────────────────────────────────────────────────────────┘
 
 ┌──────────────────────────────────────────────────────────────────────────────┐
@@ -106,7 +117,7 @@ GenAiPythonExamples/
 │   ├── sampleText_encoded.txt        # Auto-generated encoded output
 │   └── sampleText_decoded.txt        # Auto-generated decoded output
 │
-├── FirstExampleAPIKey/               # Track 1 — Getting started with Gemini
+├── GoogleAPIExample/               # Track 1 — Getting started with Gemini
 │   ├── first_ai.py                   # Validate API key with a simple message
 │   ├── list_models.py                # List all models on your API key
 │   └── ask_question.py              # Interactive single-turn Q&A
@@ -123,6 +134,12 @@ GenAiPythonExamples/
 ├── PDFSummaryExample/                # Track 1 — Multimodal PDF understanding
 │   ├── pdf_summary.py                # One-shot PDF summarizer
 │   └── pdf_summary_advanced.py       # PDF summarizer with interactive Q&A loop
+│
+├── AzureOpenAIExample/               # Track 1.5 — Azure OpenAI chat completion
+│   ├── AzureOpenaiAPITest.py         # Chat completion via AzureOpenAI client
+│   ├── chatbot.py                    # Flask web server for the browser chatbot
+│   └── templates/
+│       └── index.html                # Chat UI (HTML + CSS + JS, dark theme, markdown support)
 │
 ├── PythonCodeTest/                   # Track 2 — Core generative ML implementations
 │   ├── test_VAE.py                   # Variational Autoencoder (TensorFlow/Keras)
@@ -144,6 +161,7 @@ GenAiPythonExamples/
 | Python | 3.9 or higher |
 | pip | Latest recommended |
 | Google AI API Key | Required for Track 1 modules only |
+| Azure OpenAI resource | Required for Track 1.5 — endpoint, API key, deployment name, and API version |
 | Internet connection | Required for first-time Hugging Face model downloads |
 | GPU | Optional — all examples are tuned to run on CPU |
 
@@ -210,13 +228,33 @@ load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), "..", ".env"))
 
 Track 2 scripts (VAE, GAN, Stable Diffusion, Transformers) require no API key.
 
+### Azure OpenAI Configuration (Track 1.5)
+
+The `AzureOpenAIExample` script requires four environment variables in your `.env` file:
+
+```
+AZURE_OPENAI_API_KEY=your_azure_openai_api_key
+AZURE_OPENAI_ENDPOINT=https://your-resource-name.openai.azure.com/
+AZURE_OPENAI_API_VERSION=2024-02-01
+AZURE_OPENAI_DEPLOYMENT=your_deployment_name
+```
+
+| Variable | Where to find it |
+|---|---|
+| `AZURE_OPENAI_API_KEY` | Azure Portal → your OpenAI resource → Keys and Endpoint |
+| `AZURE_OPENAI_ENDPOINT` | Azure Portal → your OpenAI resource → Keys and Endpoint |
+| `AZURE_OPENAI_API_VERSION` | [Azure OpenAI API versions reference](https://learn.microsoft.com/en-us/azure/ai-services/openai/reference) |
+| `AZURE_OPENAI_DEPLOYMENT` | Azure AI Foundry → Deployments → your deployment name |
+
+> **Note:** The deployment name is not the model name (e.g. `gpt-4o`). It is the custom name you chose when deploying the model in Azure AI Foundry.
+
 ---
 
 ## Modules
 
 ---
 
-### 1. FirstExampleAPIKey — Gemini API Basics
+### 1. GoogleAPIExample — Gemini API Basics
 
 The entry point for Track 1. Three minimal scripts that introduce the `google-genai` SDK with as little code as possible.
 
@@ -229,9 +267,9 @@ The entry point for Track 1. Three minimal scripts that introduce the `google-ge
 **Run:**
 
 ```bash
-python FirstExampleAPIKey/first_ai.py
-python FirstExampleAPIKey/list_models.py
-python FirstExampleAPIKey/ask_question.py
+python GoogleAPIExample/first_ai.py
+python GoogleAPIExample/list_models.py
+python GoogleAPIExample/ask_question.py
 ```
 
 **Key concepts introduced:**
@@ -350,7 +388,58 @@ PDF bytes → base64 encoded → Part.from_bytes(data, mime_type="application/pd
 
 ---
 
-### 5. PythonCodeTest — Core ML Model Implementations
+### 5. AzureOpenAIExample — Azure OpenAI Chat Completion
+
+Demonstrates calling an OpenAI model (GPT-4, GPT-3.5, etc.) through Microsoft Azure using the `openai` Python SDK. Shows how Azure deployments differ from the standard OpenAI API: you authenticate with an Azure endpoint and reference models by deployment name rather than model name.
+
+| File | What it does |
+|---|---|
+| `AzureOpenaiAPITest.py` | Loads Azure credentials from `.env`, creates an `AzureOpenAI` client, sends a single chat message, and prints the reply along with model metadata and token usage. |
+| `chatbot.py` | Flask web server that serves the chat page and streams AI replies back to the browser token by token using Server-Sent Events (SSE). |
+| `templates/index.html` | Browser chat UI — dark themed, supports markdown rendering (bold, lists, code blocks, tables), shows a typing animation while waiting for the reply. |
+
+**Run the API test script:**
+
+```bash
+python AzureOpenAIExample/AzureOpenaiAPITest.py
+```
+
+**Run the browser chatbot:**
+
+```bash
+python AzureOpenAIExample/chatbot.py
+```
+
+Then open your browser at `http://127.0.0.1:5000`
+
+**Key concepts introduced:**
+
+- `AzureOpenAI` client vs standard `OpenAI` client — same SDK, different auth and routing
+- Three required auth parameters: `api_key`, `api_version`, `azure_endpoint`
+- Deployment name (`model=`) — refers to your Azure deployment, not the underlying model
+- `client.chat.completions.create()` — identical call structure to the standard OpenAI API
+- `stream=True` — receive the reply token by token instead of waiting for the full response
+- Server-Sent Events (SSE) — a simple way to push data from server to browser over HTTP
+- Inspecting `response.model`, `response.usage`, and `response.choices[0].finish_reason`
+
+**How Azure OpenAI differs from direct OpenAI:**
+
+```
+Direct OpenAI:
+  openai.api_key = "sk-..."
+  client.chat.completions.create(model="gpt-4o", ...)
+
+Azure OpenAI:
+  AzureOpenAI(api_key=..., azure_endpoint=..., api_version=...)
+  client.chat.completions.create(model="my-deployment-name", ...)
+                                         ↑
+                            Your Azure deployment name,
+                            not the underlying model name
+```
+
+---
+
+### 6. PythonCodeTest — Core ML Model Implementations
 
 Five standalone scripts implementing foundational generative AI architectures. No API key required. Each script is extensively commented to explain every design decision, hyperparameter, and layer choice.
 
@@ -873,6 +962,27 @@ Ensure your `.env` file exists at the project root (not inside a subdirectory) a
 
 ```
 GOOGLE_API_KEY=your_actual_key_here
+```
+
+**Track 1.5: `AZURE_OPENAI_API_KEY` not found / `NoneType` error on startup**
+
+Ensure all four Azure variables are set in `.env`:
+
+```
+AZURE_OPENAI_API_KEY=...
+AZURE_OPENAI_ENDPOINT=...
+AZURE_OPENAI_API_VERSION=...
+AZURE_OPENAI_DEPLOYMENT=...
+```
+
+**Track 1.5: `openai.NotFoundError` — deployment not found**
+
+The `AZURE_OPENAI_DEPLOYMENT` value must match the deployment name in Azure AI Foundry exactly (case-sensitive). It is not the model name (e.g. `gpt-4o`) — it is the name you gave the deployment when creating it.
+
+**Track 1.5: `ModuleNotFoundError: No module named 'openai'`**
+
+```bash
+pip install openai
 ```
 
 **General: Suppress TensorFlow startup warnings**

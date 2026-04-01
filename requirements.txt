@@ -7,11 +7,19 @@
 
 
 # ── Google Gemini API (Track 1) ────────────────────────────────────────────────
-# Used in: FirstExampleAPIKey/, SummaryExampleAPI/, ChatBotExample/, PDFSummaryExample/
+# Used in: GoogleAPIExample/, SummaryExampleAPI/, ChatBotExample/, PDFSummaryExample/
 google-genai>=1.0
 
-# Used in: all Track 1 modules (loads GOOGLE_API_KEY from .env)
+# Used in: all Track 1 and Track 1.5 modules (loads API keys from .env)
 python-dotenv>=1.0
+
+
+# ── Azure OpenAI / OpenAI API ──────────────────────────────────────────────────
+# Used in: AzureOpenAIExample/
+openai>=1.0
+
+# ── Web Framework (chatbot.py browser UI) ─────────────────────────────────────
+flask>=3.0
 
 
 # ── Core ML Frameworks (Track 2) ──────────────────────────────────────────────
